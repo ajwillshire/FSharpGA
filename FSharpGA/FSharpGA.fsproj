@@ -6,11 +6,9 @@
   <ItemGroup>
     <Compile Include="GATypes.fs" />
     <Compile Include="AuxiliaryFunctions.fs" />
-    <Compile Include="BladeFunctions.fs" />
+    <Compile Include="Blades.fs" />
     <Compile Include="GAin2D.fs" />
-    <Compile Include="FSharpGA.fs" />
     <Compile Include="MultiVectors.fs" />
-    <Compile Include="GAin2D" />
     <None Include="Script.fsx" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />

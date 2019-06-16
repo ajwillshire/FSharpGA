@@ -19,7 +19,8 @@ bin
 # except build/, which is used as an MSBuild target.
 !**/[Pp]ackages/build/
 
-
+# Don't need this folder
+**/GAViewer
 
 
 

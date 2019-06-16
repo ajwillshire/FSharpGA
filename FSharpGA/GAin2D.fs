@@ -1,16 +1,14 @@
 ﻿namespace FSharpGA
 open GATypes
 open AuxiliaryFunctions
+open Blades
 
-module GAVectorFunctionsMaps =
+module GAin2D =
 
+    //A Vector can be expressed as a sum of magnitudes in the various Bases
     type Vector = Map<Dimension, float>
 
-    type BiVector ={
-        magnitude:float
-        dimensions:Basis
-    }
-    
+    //Get the dimensions out of a Map
     let getKeySet(mapIn:Map<Dimension, _>):Set<Dimension> =
         mapIn |> Map.toSeq |> Seq.map(fst) |> Set.ofSeq
 
@@ -68,7 +66,7 @@ module GAVectorFunctionsMaps =
         |> Seq.reduce(+)
 
 
-    let makeBiVector(a:Vector, b:Vector, x:Dimension, y:Dimension) =
+    let makeBiVector(a:Vector, b:Vector, x:Dimension, y:Dimension):Blade =
 
         let ax = if a.ContainsKey(x) then a.[x] else 0.
         let ay = if a.ContainsKey(y) then a.[y] else 0.
@@ -76,22 +74,17 @@ module GAVectorFunctionsMaps =
         let by = if b.ContainsKey(y) then b.[y] else 0.
 
         let coeff = ax * by - bx * ay
-        {magnitude = coeff; basis = {dimensions = Set.ofList[x;y]}}
+        {magnitude =coeff; basis = {dimensions = Set.ofList[x;y]}}
 
 
     let exteriorProduct(a:Vector, b:Vector, space:Basis)=
-
         let biVectors = combinations [] 2 (space.DimList)
         biVectors |> Seq.map(fun x -> makeBiVector(a, b, x.[0], x.[1]))
 
     let geometricProduct2D(a:Vector, b:Vector, space:Basis)=
-
         let grade2 = exteriorProduct(a,b,space) |> Seq.toList
-
-        let grade1 = {magnitude = dotProduct(a,b,space)
-                      basis = {dimensions = Set.empty}}
-
-        Set.ofList(List.append [grade1] grade2)
+        let grade1 = {magnitude = dotProduct(a,b,space); basis = {dimensions = Set.empty}}
+        List.append [grade1] grade2
 
 
 

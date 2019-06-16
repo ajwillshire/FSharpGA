@@ -1,8 +1,8 @@
 namespace FSharpGA
-open System.Text
 
 module GATypes = 
 
+    //We can combine whatever Dimensions that we want to suit the domain that we're working in
     type Dimension =
         | X
         | Y
@@ -17,11 +17,8 @@ module GATypes =
         member this.Grade = this.dimensions |> Set.count
         member this.DimList = this.dimensions |> Set.toList
 
-    //Essentially a MultiVector of single grade
-    type Blade ={magnitude:float; basis:Basis} with
-        member this.UnitBases(space:Basis) = space.dimensions 
-                                                |> Set.toArray //Needs to be an Array as a Set will exclude repeated entries
-                                                |> Array.map(fun x -> (if (this.basis.dimensions |> Set.contains x ) then 1 else 0))
+
+
 
 
 

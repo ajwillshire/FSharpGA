@@ -1,16 +1,27 @@
 #load "GATypes.fs"
 #load "AuxiliaryFunctions.fs"
-#load "BladeFunctions.fs"
+#load "Blades.fs"
 #load "GAin2D.fs"
 #load "MultiVectors.fs"
 
 
 open FSharpGA
 open GATypes
+open Blades
 open MultiVectors
 
-let space:Basis = {dimensions = Set.ofList [X;Y;Z]}
- //let space:List<Dimension> = [E1;E2;E3]
+
+
+//****************************************************************************************
+//Dimensions and sets
+
+let space:Basis = {dimensions = Set.ofList [X;Y;Z]} //val space : Basis = {dimensions = set [X; Y; Z];}
+
+//The advantage with using sets is that it reduces the errors that are possible in the initialisation
+let space2 = {dimensions = Set.ofList [Y;Y;X;Z]} //val space2 : Basis = {dimensions = set [X; Y; Z];}
+
+//****************************************************************************************
+
 
 
 //let a = makeVector([0.; 1.; 1.], space)
@@ -47,25 +58,35 @@ let space:Basis = {dimensions = Set.ofList [X;Y;Z]}
 
 //let mm1 = MultiVectors.geometricProduct(g3,m1)
 
-let bv2 = MultiVectors.createSimpleMultiVector(10., [Y;X])
+let bv1 = MultiVectors.createSimpleMultiVector(10., [Y;X])
+let j = MultiVectors.createSimpleMultiVector(1., [Z;X;Y])
+let j2 = j ** 1
+let k = j*bv1
+
+let x1 =Blades.createVector(1., X)
+let y1 =Blades.createVector(3., Y)
+let z1 =Blades.createVector(0., Z)
+let v1 = {blades = [x1;y1;z1]}
+
+let x2 =createBlade(2., [X])
+let y2 =createBlade(0., [Y])
+let z2 =createBlade(1.,[Z])
+let v2 = {blades = [x2;z2]}
 
 
-let x1 ={magnitude = 5.; basis = {dimensions = Set.ofList[X]}}
-let y1 ={magnitude = 3.; basis = {dimensions = Set.ofList[Y]}}
-//let z1 ={magnitude = 0.; basis = {dimensions = Set.ofList[Z]}}
-let v1 = {blades = Set.ofList[x1;y1]}
+let v3 = {blades = [x1]}
+let v3sq = v3*v3
 
-let x2 ={magnitude = 2.; basis = {dimensions = Set.ofList[X]}}
-//let y2 ={magnitude = 0.; basis = {dimensions = Set.ofList[Y]}}
-let z2 ={magnitude = 1.; basis = {dimensions = Set.ofList[Z]}}
-let v2 = {blades = Set.ofList[x2;z2]}
-
-let bv1 = {blades = Set.ofList [{magnitude = 7.; basis = {dimensions = Set.ofList[X;Y]}}
-                                {magnitude = 1.; basis = {dimensions = Set.ofList[Z]}}]}
+let e1e2 = {blades = [x1]} * {blades = [y1]}
+let e2e1 = {blades = [y1]} * {blades = [x1]}
 
 
+let mv1 = {blades = [createBlade(7., [X;Y])
+                     createBlade(1., [Z])]}
 
 let gp1 = v1 * v2;;
 let gp2 = v1 * gp1;;
 
-let gp3 = v2 * bv1;;
+let gp3 = mv1 * bv1;;
+
+
