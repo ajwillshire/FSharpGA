@@ -32,11 +32,17 @@ module MultiVectors =
         static member Pow (mv1:MultiVector, n:int) = 
             seq{1..(n-1)} |> Seq.fold(fun acc _ -> acc * mv1) mv1
 
+        static member (~-) (mv1:MultiVector) = {blades = mv1.blades |> List.map(fun b -> {magnitude = -b.magnitude; basis = b.basis})}
+
 
     //For objects with more than one dimensions, we need to calculate the sign
     let createSimpleMultiVector(mag:float, dims:Dimension list):MultiVector = {blades = [createBlade(mag, dims)]}
    
     let createIdentity(space:Basis):MultiVector= {blades = [{magnitude=1.; basis = space}]}
 
+    let createIdentityInverse(space:Basis):MultiVector= 
+        let n = float space.Grade
+        let mag = (-1.)**(n*(n-1.)/2.)
+        {blades = [{magnitude=mag; basis = space}]}
 
         

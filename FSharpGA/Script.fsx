@@ -59,7 +59,7 @@ let space2 = {dimensions = Set.ofList [Y;Y;X;Z]} //val space2 : Basis = {dimensi
 //let mm1 = MultiVectors.geometricProduct(g3,m1)
 
 let bv1 = MultiVectors.createSimpleMultiVector(10., [Y;X])
-let j = MultiVectors.createSimpleMultiVector(1., [Z;X;Y])
+let j = MultiVectors.createSimpleMultiVector(-1., [X;Y;Z])
 let j2 = j ** 1
 let k = j*bv1
 
@@ -90,3 +90,42 @@ let gp2 = v1 * gp1;;
 let gp3 = mv1 * bv1;;
 
 
+//****************************************************************************************
+//Torque Example
+let lever = {blades = [createBlade(0.76, [X])]}
+let force = {blades = [createBlade(900., [Y])]}
+
+let torque = lever * force
+
+//The cross product is the dual of the exterior product
+let space3D = {dimensions = Set.ofList [X;Y;Z]}
+let Iinv = createIdentityInverse(space3D) //I is the "unit pseudoscalar", I^-1 = +/-I
+let dual = torque * Iinv
+//****************************************************************************************
+
+//****************************************************************************************
+//Reflection Example
+
+//The vector will be reflected in the plane perpendicular to a1
+let a1 = createSimpleMultiVector(1., [Y])
+let vec1 = {blades = [createBlade(3., [Y]);createBlade(4., [Z])]}
+
+let reflected = -a1 * vec1 * a1
+
+//****************************************************************************************
+
+
+
+//****************************************************************************************
+//Rotation Example
+
+//The vector will be rotated
+let a2 = createSimpleMultiVector(1., [X])
+let b2 = createSimpleMultiVector(1., [Y])
+let ab2 = a2 * b2
+
+let vec2 = {blades = [createBlade(2., [X]); createBlade(3., [Y]);createBlade(4., [Z])]}
+
+let rotated = ab2 * vec2 * ab2
+
+//****************************************************************************************
