@@ -3,14 +3,14 @@
 #load "Blades.fs"
 #load "GAin2D.fs"
 #load "MultiVectors.fs"
+#load "VectorCalculations.fs"
 
 
 open FSharpGA
 open GATypes
 open Blades
-open MultiVectors
-
-
+open MultiVector
+open VectorCalculations
 
 //****************************************************************************************
 //Dimensions and sets
@@ -22,50 +22,14 @@ let space2 = {dimensions = Set.ofList [Y;Y;X;Z]} //val space2 : Basis = {dimensi
 
 //****************************************************************************************
 
-
-
-//let a = makeVector([0.; 1.; 1.], space)
-//let b = makeVector([1.; 1.; 0.], space)
-
-//let g = countSwaps(a,b,space)
-//let h = xOrDimensions(a,b,space)
-//let i = signSwaps(a,b,space)
-//let h = GeometricProduct(a,b, space)
-//let j = GeometricProduct(b,a, space);;
-
-
-//combinations [] 2 (space.dimList)
-
-
-//let t1 = makeVector([0.2;0.7;-0.2], space)
-//let t2 = makeVector([-0.7;-0.2;0.5], space)
-
-//let t1 = makeVector([5.;3.;0.], space)
-//let t2 = makeVector([2.;0.;1.], space)
-
-//let t3 = makeVector([1.;3.;-1.], space)
-//let t4 = makeVector([2.;2.;-3.], space)
-
-
-//let g1 = geometricProduct(t1,t2,space);;
-
-//let g2 = geometricProduct(t3,t4,space);;
-
-//let g3 = geometricProduct(t1,t4,space);;
-
-//let m1 = MultiVectors.geometricProduct(g1, g2)
-//let m2 = MultiVectors.geometricProduct(g1,g3)
-
-//let mm1 = MultiVectors.geometricProduct(g3,m1)
-
-let bv1 = MultiVectors.createSimpleMultiVector(10., [Y;X])
-let j = MultiVectors.createSimpleMultiVector(-1., [X;Y;Z])
+let bv1 = MultiVector.createSimpleMultiVector(10., [Y;X])
+let j = MultiVector.createSimpleMultiVector(-1., [X;Y;Z])
 let j2 = j ** 1
 let k = j*bv1
 
-let x1 =Blades.createVector(1., X)
-let y1 =Blades.createVector(3., Y)
-let z1 =Blades.createVector(0., Z)
+let x1 =Blades.createBasisVector(1., X)
+let y1 =Blades.createBasisVector(3., Y)
+let z1 =Blades.createBasisVector(0., Z)
 let v1 = {blades = [x1;y1;z1]}
 
 let x2 =createBlade(2., [X])
@@ -90,18 +54,7 @@ let gp2 = v1 * gp1;;
 let gp3 = mv1 * bv1;;
 
 
-//****************************************************************************************
-//Torque Example
-let lever = {blades = [createBlade(0.76, [X])]}
-let force = {blades = [createBlade(900., [Y])]}
 
-let torque = lever * force
-
-//The cross product is the dual of the exterior product
-let space3D = {dimensions = Set.ofList [X;Y;Z]}
-let Iinv = createIdentityInverse(space3D) //I is the "unit pseudoscalar", I^-1 = +/-I
-let dual = torque * Iinv
-//****************************************************************************************
 
 //****************************************************************************************
 //Reflection Example
@@ -124,8 +77,17 @@ let a2 = createSimpleMultiVector(1., [X])
 let b2 = createSimpleMultiVector(1., [Y])
 let ab2 = a2 * b2
 
-let vec2 = {blades = [createBlade(2., [X]); createBlade(3., [Y]);createBlade(4., [Z])]}
+//let vec2 = MultiVector.ofBlades([createBlade(2., [X]); createBlade(3., [Y]);createBlade(4., [Z])])
+//let vec2 = MultiVector.createVector([2.; 3.; 4.], [X;Y;Z])
+let vec2 = MultiVector.ofComponents([(2., [X]); (3., [Y]); (4., [Z])])
 
-let rotated = ab2 * vec2 * ab2
+
+let vec3 = MultiVector.ofBlades([createBlade(1., [X;Z])])
+
+let rotated = vec3 * vec2 * vec3 //ab2 * vec2 * ab2
+
+vec2.components;;
+rotated.components;;
+vec3.components;;
 
 //****************************************************************************************

@@ -12,13 +12,16 @@ module Blades =
                                                     |> Set.toArray //Needs to be an Array as a Set will 
                                                                     //exclude repeated entries (not helpful with trues/falses)
                                                     |> Array.map(fun x -> this.basis.dimensions |> Set.contains x)
+       
+        member this.components = (this.magnitude, this.basis |> fun b -> b.DimList)
 
     //This constructor makes sure the magnitude is of the correct sign given the order of dimensions given                                                    
     let createBlade(mag:float, dims:Dimension list) = {magnitude = mag * float (signDimSwaps(dims)); basis = {dimensions = Set.ofList dims}}
 
     //Helper functions to create common objects in the space
     let createScalar(mag:float):Blade = createBlade(mag, []) //Zero dimensions
-    let createVector(mag:float, dim:Dimension):Blade = createBlade(mag, [dim]) //One dimension
+    let createBasisVector(mag:float, dim:Dimension):Blade = createBlade(mag, [dim]) //One dimension
+    let createBasisBiVector(mag:float, dim1:Dimension, dim2:Dimension):Blade = createBlade(mag, [dim1; dim2])
 
 
     //Multiplies two blades together, grouping common terms, etc.

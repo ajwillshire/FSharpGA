@@ -2,7 +2,7 @@
 open GATypes
 open Blades
 
-module MultiVectors =
+module MultiVector =
 
         //Our multivectors will typically be of a single grade but mixed-grade multivectors are possible, e.g., for rotations
     type MultiVector = {blades:Blade list} with
@@ -14,6 +14,7 @@ module MultiVectors =
                                         |> fun dims -> [for d in dims do yield! d]
                                         |> Set.ofList
         
+        member this.components = this.blades |> List.map(fun b-> b.components)
         //Addition
         static member (+) (mv1:MultiVector, mv2:MultiVector) = 
             let allBlades = [mv1.blades; mv2.blades]
@@ -35,9 +36,16 @@ module MultiVectors =
         static member (~-) (mv1:MultiVector) = {blades = mv1.blades |> List.map(fun b -> {magnitude = -b.magnitude; basis = b.basis})}
 
 
-    //For objects with more than one dimensions, we need to calculate the sign
+    let ofBlades(bladesIn:Blade list) = {blades = bladesIn} //Slightly unnecessary constructor objects with more than one dimensions, we need to calculate the sign
+    
+    let ofComponents(components:(float * Dimension list) list) =
+        {blades = components |> List.map (fun (a,b) -> createBlade(a, b))} 
+ 
     let createSimpleMultiVector(mag:float, dims:Dimension list):MultiVector = {blades = [createBlade(mag, dims)]}
-   
+
+    let createVector(magList:float list, dimList:Dimension list):MultiVector = 
+        {blades = List.zip magList dimList |> List.map (fun (a,b) -> createBlade(a, [b]))}
+
     let createIdentity(space:Basis):MultiVector= {blades = [{magnitude=1.; basis = space}]}
 
     let createIdentityInverse(space:Basis):MultiVector= 
@@ -45,4 +53,4 @@ module MultiVectors =
         let mag = (-1.)**(n*(n-1.)/2.)
         {blades = [{magnitude=mag; basis = space}]}
 
-        
+
