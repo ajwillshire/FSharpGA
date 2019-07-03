@@ -29,9 +29,8 @@ let dual = torque * Iinv //Multiplying by the Inverse of the unit pseudoscalar g
 //In 3 dimensions, the regular calculations come up with the same answer (which is a good thing)
 let leverV = vectorArray3D(lever)
 let forceV = vectorArray3D(force)
-let mag = crossProduct(leverV, forceV)
-
-
+let cp = crossProduct(leverV, forceV)
+toMultiVector(cp)
 //****************************************************************************************
 
 

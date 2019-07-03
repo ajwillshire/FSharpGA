@@ -73,21 +73,34 @@ let reflected = -a1 * vec1 * a1
 //Rotation Example
 
 //The vector will be rotated
-let a2 = createSimpleMultiVector(1., [X])
+let a2 = createSimpleMultiVector(4., [X])
 let b2 = createSimpleMultiVector(1., [Y])
 let ab2 = a2 * b2
+let ab3 = b2*a2
+let aa = a2*a2
 
 //let vec2 = MultiVector.ofBlades([createBlade(2., [X]); createBlade(3., [Y]);createBlade(4., [Z])])
 //let vec2 = MultiVector.createVector([2.; 3.; 4.], [X;Y;Z])
 let vec2 = MultiVector.ofComponents([(2., [X]); (3., [Y]); (4., [Z])])
-
+let vSq = vec2**2
 
 let vec3 = MultiVector.ofBlades([createBlade(1., [X;Z])])
 
+//let jj = vec3 * vec3
+
 let rotated = vec3 * vec2 * vec3 //ab2 * vec2 * ab2
 
-vec2.components;;
-rotated.components;;
-vec3.components;;
+vec2.Components;;
+rotated.Components;;
+vec3.Components;;
 
 //****************************************************************************************
+
+
+
+let a = 2
+let p = 4
+
+seq{1..(p-1)} |> Seq.fold(fun acc _ -> acc * a) a
+
+seq{1..p} |> Seq.fold(fun acc _ -> acc * a) 1

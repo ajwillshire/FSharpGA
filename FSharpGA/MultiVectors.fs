@@ -14,11 +14,19 @@ module MultiVector =
                                         |> fun dims -> [for d in dims do yield! d]
                                         |> Set.ofList
         
-        member this.components = this.blades |> List.map(fun b-> b.components)
+        member this.Components = this.blades |> List.map(fun b-> b.components)
+
+        //Negation
+        static member (~-) (mv1:MultiVector) = {blades = mv1.blades |> List.map(fun b -> {magnitude = -b.magnitude; basis = b.basis})}
+
         //Addition
         static member (+) (mv1:MultiVector, mv2:MultiVector) = 
             let allBlades = [mv1.blades; mv2.blades]
             {blades = simplifyBladeList(allBlades)}
+
+        //Subtraction
+        static member (-) (mv1:MultiVector, mv2:MultiVector) =
+            mv1 + (-mv2)
 
         //Geometric Product
         static member (*)  (mv1:MultiVector, mv2:MultiVector) = 
@@ -33,9 +41,8 @@ module MultiVector =
         static member Pow (mv1:MultiVector, n:int) = 
             seq{1..(n-1)} |> Seq.fold(fun acc _ -> acc * mv1) mv1
 
-        static member (~-) (mv1:MultiVector) = {blades = mv1.blades |> List.map(fun b -> {magnitude = -b.magnitude; basis = b.basis})}
 
-
+    //Variety of Constructors
     let ofBlades(bladesIn:Blade list) = {blades = bladesIn} //Slightly unnecessary constructor objects with more than one dimensions, we need to calculate the sign
     
     let ofComponents(components:(float * Dimension list) list) =
@@ -46,6 +53,8 @@ module MultiVector =
     let createVector(magList:float list, dimList:Dimension list):MultiVector = 
         {blades = List.zip magList dimList |> List.map (fun (a,b) -> createBlade(a, [b]))}
 
+
+    //Identity methods
     let createIdentity(space:Basis):MultiVector= {blades = [{magnitude=1.; basis = space}]}
 
     let createIdentityInverse(space:Basis):MultiVector= 
